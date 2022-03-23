@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 8b7df4b938ce3ca488b8523c7b362b3b
+guid: 5df5e778cd8ebee4788ccd9e182189e2
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable: []
@@ -8,12 +8,12 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Sand_Texture
-    second: {fileID: 2100000, guid: 8b16b7d9740f7a24a95fa260b879e2af, type: 2}
+    second: {fileID: 2100000, guid: a1417e27a8ab2fc4296bf79dec77665b, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Water_Texture
-    second: {fileID: 2100000, guid: 51a22e2746de2e549ab59dfaa33f5254, type: 2}
+    second: {fileID: 2100000, guid: 3c9b90a77d8bd364ca258850456c313e, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

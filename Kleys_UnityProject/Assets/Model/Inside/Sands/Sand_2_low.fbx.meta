@@ -3,7 +3,12 @@ guid: ee4de9ae37e7ebd42b95097694bb530d
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Sand_Texture
+    second: {fileID: 2100000, guid: 22762e93d73c4f64599d1f9fcabd92e2, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
