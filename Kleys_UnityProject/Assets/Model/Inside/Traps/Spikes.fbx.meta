@@ -3,7 +3,17 @@ guid: a2b24d515f6c79f46af7c32f8de7bd51
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Metal_Texture
+    second: {fileID: 2100000, guid: 91b8158e35134724caf002235e4f5841, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Spikes_Texture
+    second: {fileID: 2100000, guid: 8094569332f762a499636f8cfb6376ab, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -45,7 +55,7 @@ ModelImporter:
     importLights: 1
     fileIdsGeneration: 2
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1
