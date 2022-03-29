@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05d5fd87238dd244fb181b4176cec406, type: 3}
+  m_Name: Player
+  m_EditorClassIdentifier: 
+  actorName: Leonard
+  description: Leonard is the  main Actor that the user will play
+  health: 3
+  speed: 5
+  rotationSpeed: 80
+  jumpingForce: 400
+  actor: {fileID: 6371854253120153977, guid: b9861274817502840bdc504f971de37d, type: 3}
