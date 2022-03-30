@@ -29,7 +29,6 @@ public class InputManager : MonoBehaviour
     {
         if(Input.GetButtonDown("Jump") && player.IsOnGround())
         {
-            Debug.Log("Let's Jump");
             animator.SetBool("isJumping", true);
             player.Set_IsJumping(true);
             jump.Jumping(player.transform);

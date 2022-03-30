@@ -48,7 +48,17 @@ public class Player : MonoBehaviour, IActorTemplate
     {
         if (jumpManager)
         {
-            isOnGround = jumpManager.ISGrounded();
+            isOnGround = jumpManager.IsGrounded();
+
+            if(isOnGround)
+            {
+                isFalling = false;
+                isJumping = false;
+            }
+            else if(isOnGround == false)
+            {
+                isFalling = jumpManager.IsFalling();
+            }
         }
 
         if(inputManager)
@@ -87,6 +97,13 @@ public class Player : MonoBehaviour, IActorTemplate
         if (isOnGround)
             return true;
         else 
+            return false;
+    }
+    public bool IsJumping()
+    {
+        if (isJumping)
+            return true;
+        else
             return false;
     }
     public void Set_IsJumping(bool j)

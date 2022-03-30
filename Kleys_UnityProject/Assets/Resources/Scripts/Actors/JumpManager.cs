@@ -12,82 +12,77 @@ public class JumpManager : MonoBehaviour
 
     private RaycastHit hitInfo;
     private int layerMask = 1 << 6;
-    private float distance;
+    public float distance;
+    public float newDistance;
 
-    private float startingDistanceFromGround = 0;
+    //private float startingDistanceFromGround = 0;
+
+    GroundCheck groundCheck;
+    FallingCheck fallingCheck;
+
     // Start is called before the first frame update
     void Start()
     {
-        if (gameObject.GetComponent<CapsuleCollider>())
-        {
-            capsuleCollider = gameObject.GetComponent<CapsuleCollider>();
-        }
-        else
-        {
-            Debug.Log("No capsule Collider found");
-        }
+
+        groundCheck = gameObject.AddComponent<GroundCheck>();
+        fallingCheck = gameObject.AddComponent<FallingCheck>();
     }
 
-    public bool ISGrounded()
+    public bool IsGrounded()
     {
-        if (capsuleCollider)
-            rayStartingPoint = new Vector3(capsuleCollider.bounds.center.x, capsuleCollider.bounds.min.y + startingPoint_offset, capsuleCollider.bounds.center.z);
-
-        //If the ground is detected 
-        if (Physics.Raycast(rayStartingPoint, Vector3.down, out hitInfo, rayLength, layerMask))
+        if(groundCheck)
         {
-            Debug.DrawRay(transform.position, Vector3.down * hitInfo.distance, Color.red);
-            Debug.Log(Mathf.Round(hitInfo.distance * 10) / 10);
-            if (Mathf.Round(hitInfo.distance * 10) / 10 == 0)
-            {
-                Debug.Log("OnGround");
-                return true;
-            }
-            else
-                Debug.Log("NotOnGround");
-                return false;
+            return groundCheck.ISGrounded();
         }
-        //If the ground is not detected 
-        else
-        {
-            return false;
-        }
+        return false;
     }
 
     public bool IsFalling()
     {
-        if (capsuleCollider)
-            rayStartingPoint = new Vector3(capsuleCollider.bounds.center.x, capsuleCollider.bounds.min.y + startingPoint_offset, capsuleCollider.bounds.center.z);
-        if (Physics.Raycast(rayStartingPoint, Vector3.down, out hitInfo, rayLength, layerMask))
+        if (fallingCheck)
         {
-            float newDistance = DistanceFromGround(rayStartingPoint, hitInfo.transform.position);
-
-            if (distance == 0)
-            {
-
-            }
-            else if (newDistance < distance)
-            {
-                //Debug.Log("We are falling");
-
-            }
-
-            distance = newDistance;
-
+            return fallingCheck.IsFalling();
         }
-
         return false;
     }
-    private float DistanceFromGround(Vector3 startingPoint, Vector3 hitInfo)
+
+    void RayCasting ()
     {
+        if (capsuleCollider)
+        {
+            rayStartingPoint = new Vector3(capsuleCollider.bounds.center.x, capsuleCollider.bounds.min.y + startingPoint_offset, capsuleCollider.bounds.center.z);
+            if (Physics.Raycast(rayStartingPoint, Vector3.down, out hitInfo, rayLength, layerMask))
+            {
+                //float newDistance = DistanceFromGround(hitInfo);
+                newDistance = DistanceFromGround(hitInfo);
+                /*
+                if (distance == 0 || newDistance > distance)
+                {
+                    //Debug.Log("We are not falling");
+                }
+                else if (newDistance < distance)
+                {
+                    //Debug.Log("We are falling");
+                }*/
+                distance = newDistance;
+                
+            }
+            /*
+            else if (player.IsOnGround() == false && player.IsJumping() == false)
+            {
+                Debug.Log("We are falling");
+            }*/
+        }
+        Debug.Log("Error: Capsule not detected");
+    }
+    private float DistanceFromGround(RaycastHit hitInfo)
+    {
+        return Mathf.Round(hitInfo.distance * 10) / 10;
+        /*
         //float distanceFromGround = startingPoint - hitInfo;
         float distance = Vector3.Distance(startingPoint, hitInfo);
         //Debug.Log(distance);
         return distance;
-    }
-
-    void DrawRay()
-    {
-        Debug.DrawRay(rayStartingPoint, Vector2.down * rayLength, Color.blue);
+        */
     }
 }
