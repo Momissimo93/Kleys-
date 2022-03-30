@@ -27,9 +27,10 @@ public class InputManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetButtonDown("Jump") && player.IsOnGround())
+        if(Input.GetButtonDown("Jump") && player.Get_IsOnGround())
         {
             animator.SetBool("isJumping", true);
+            player.GetAnimator().SetBool("isGrounded", true);
             player.Set_IsJumping(true);
             jump.Jumping(player.transform);
         }
@@ -52,7 +53,6 @@ public class InputManager : MonoBehaviour
             HandleHorizontalInputs(horizontalInput);
         }
     }
-
     private void HandleVerticalInputs(float verticalInput)
     {
         translate.Move(this.transform, new Vector2(0, verticalInput));
@@ -71,6 +71,5 @@ public class InputManager : MonoBehaviour
     {
         animator.SetFloat("speed", Input.GetAxis("Vertical"));
         animator.SetFloat("rotationSpeed", Input.GetAxis("Horizontal"));
-        animator.SetFloat("Ciao", Input.GetAxis("Horizontal"));
     }
 }

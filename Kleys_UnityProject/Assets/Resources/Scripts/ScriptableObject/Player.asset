@@ -17,5 +17,5 @@ MonoBehaviour:
   health: 3
   speed: 5
   rotationSpeed: 80
-  jumpingForce: 400
+  jumpingForce: 800
   actor: {fileID: 6371854253120153977, guid: b9861274817502840bdc504f971de37d, type: 3}

@@ -38,6 +38,7 @@ public class Player : MonoBehaviour, IActorTemplate
         {
             animator = gameObject.GetComponent<Animator>();
             inputManager.SetAnimator(animator);
+            jumpManager.SetAnimator(animator);
         }
         else
         {
@@ -47,20 +48,7 @@ public class Player : MonoBehaviour, IActorTemplate
     void Update ()
     {
         if (jumpManager)
-        {
-            isOnGround = jumpManager.IsGrounded();
-
-            if(isOnGround)
-            {
-                isFalling = false;
-                isJumping = false;
-            }
-            else if(isOnGround == false)
-            {
-                isFalling = jumpManager.IsFalling();
-            }
-        }
-
+            jumpManager.UpdateManger();
         if(inputManager)
             inputManager.UpdateAnimations();
     }
@@ -92,31 +80,50 @@ public class Player : MonoBehaviour, IActorTemplate
         get { return jumpingForce; }
         set { jumpingForce = value; }
     }
-    public bool IsOnGround ()
+    public void Set_IsOnGround(bool b)
+    {
+        if (b == true)
+            isOnGround = true;
+        else
+            isOnGround = false;
+    }
+    public void Set_IsJumping(bool j)
+    {
+        if (j == true)
+            isJumping = true;
+        else
+            isJumping = false;
+    }
+    public void Set_IsFalling(bool b)
+    {
+        if (b == true)
+            isFalling = true;
+        else
+            isFalling = false;
+    }
+    public Animator GetAnimator ()
+    {
+        return animator;
+    }
+    public bool Get_IsOnGround()
     {
         if (isOnGround)
             return true;
-        else 
+        else
             return false;
     }
-    public bool IsJumping()
+    public bool Get_IsJumping()
     {
         if (isJumping)
             return true;
         else
             return false;
     }
-    public void Set_IsJumping(bool j)
+    public bool Get_IsFalling()
     {
-        if (j == true)
-        {
-            isJumping = true;
-        }
+        if (isFalling)
+            return true;
         else
-            isJumping = false;
-    }
-    public Animator GetAnimator ()
-    {
-        return animator;
+            return false;
     }
 }

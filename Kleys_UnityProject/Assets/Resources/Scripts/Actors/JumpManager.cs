@@ -7,7 +7,7 @@ public class JumpManager : MonoBehaviour
     [SerializeField] CapsuleCollider capsuleCollider;
     [SerializeField] Vector3 rayStartingPoint;
 
-    [SerializeField] [Range(0.0f, 3f)] float rayLength = 2f;
+    [SerializeField] [Range(0.0f, 10f)] float rayLength = 10f;
     [SerializeField] [Range(0.0f, 0.5f)] float startingPoint_offset = 0.01f;
 
     private RaycastHit hitInfo;
@@ -15,17 +15,62 @@ public class JumpManager : MonoBehaviour
     public float distance;
     public float newDistance;
 
-    //private float startingDistanceFromGround = 0;
-
     GroundCheck groundCheck;
     FallingCheck fallingCheck;
+    Player player;
+    Animator animator;
 
     // Start is called before the first frame update
     void Start()
     {
+        if (gameObject.GetComponent<CapsuleCollider>())
+        {
+            capsuleCollider = gameObject.GetComponent<CapsuleCollider>();
+            groundCheck = gameObject.AddComponent<GroundCheck>();
+            groundCheck.Constructor(this);
+            fallingCheck = gameObject.AddComponent<FallingCheck>();
+            if (gameObject.GetComponent<Player>())
+            {
+                player = gameObject.GetComponent<Player>();
+            }
+            fallingCheck.Constructor(this);
+        }
+        else
+        {
+            Debug.Log("Error: No capsule Collider found");
+        }
+    }
 
-        groundCheck = gameObject.AddComponent<GroundCheck>();
-        fallingCheck = gameObject.AddComponent<FallingCheck>();
+    public void UpdateManger()
+    {
+        if(player)
+        {
+            RayCasting();
+            player.Set_IsOnGround(IsGrounded());
+            if (player.Get_IsOnGround() == true)
+            {
+                player.Set_IsFalling(false);
+                player.Set_IsJumping(false);
+                player.GetAnimator().SetBool("isFalling", false);
+                player.GetAnimator().SetBool("isGrounded", true);
+                player.GetAnimator().SetBool("isJumping", false);
+            }
+            else if (player.Get_IsOnGround() == false)
+            {
+                player.GetAnimator().SetBool("isGrounded", false);
+                player.Set_IsFalling(IsFalling());
+
+                if (player.Get_IsFalling() == true)
+                {
+                    player.GetAnimator().SetBool("isFalling", true);
+                }
+            }
+            else if (player.Get_IsJumping() == false && player.Get_IsFalling() == false && player.Get_IsOnGround() == true)
+            {
+                Debug.Log("Reached the ground"); 
+            }
+
+        }
     }
 
     public bool IsGrounded()
@@ -46,43 +91,34 @@ public class JumpManager : MonoBehaviour
         return false;
     }
 
-    void RayCasting ()
+    public void RayCasting ()
     {
         if (capsuleCollider)
         {
             rayStartingPoint = new Vector3(capsuleCollider.bounds.center.x, capsuleCollider.bounds.min.y + startingPoint_offset, capsuleCollider.bounds.center.z);
             if (Physics.Raycast(rayStartingPoint, Vector3.down, out hitInfo, rayLength, layerMask))
             {
-                //float newDistance = DistanceFromGround(hitInfo);
+                DrawRay(hitInfo);
                 newDistance = DistanceFromGround(hitInfo);
-                /*
-                if (distance == 0 || newDistance > distance)
-                {
-                    //Debug.Log("We are not falling");
-                }
-                else if (newDistance < distance)
-                {
-                    //Debug.Log("We are falling");
-                }*/
                 distance = newDistance;
-                
             }
-            /*
-            else if (player.IsOnGround() == false && player.IsJumping() == false)
-            {
-                Debug.Log("We are falling");
-            }*/
         }
-        Debug.Log("Error: Capsule not detected");
+        else
+        {
+            Debug.Log("Error: Capsule not detected");
+        }
     }
-    private float DistanceFromGround(RaycastHit hitInfo)
+    public float DistanceFromGround(RaycastHit hitInfo)
     {
+        Debug.Log(Mathf.Round(hitInfo.distance * 10) / 10);
         return Mathf.Round(hitInfo.distance * 10) / 10;
-        /*
-        //float distanceFromGround = startingPoint - hitInfo;
-        float distance = Vector3.Distance(startingPoint, hitInfo);
-        //Debug.Log(distance);
-        return distance;
-        */
+    }
+    void DrawRay(RaycastHit hitInfo)
+    {
+        Debug.DrawRay(transform.position, Vector3.down * hitInfo.distance, Color.red);
+    }
+    public void SetAnimator(Animator anim)
+    {
+        animator = anim;
     }
 }
