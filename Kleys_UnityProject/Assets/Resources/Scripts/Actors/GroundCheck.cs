@@ -11,9 +11,9 @@ public class GroundCheck : MonoBehaviour
     {
         jumpManager = j;
     }
-
     public bool ISGrounded()
     {
+        //If the distance from the ground is equal to 0 means that the player is touching the ground 
         if (jumpManager.distance == 0)
         {
             return true;

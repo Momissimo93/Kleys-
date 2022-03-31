@@ -30,9 +30,13 @@ public class InputManager : MonoBehaviour
         if(Input.GetButtonDown("Jump") && player.Get_IsOnGround())
         {
             animator.SetBool("isJumping", true);
-            player.GetAnimator().SetBool("isGrounded", true);
             player.Set_IsJumping(true);
             jump.Jumping(player.transform);
+        }
+        else if (Input.GetKeyDown(KeyCode.F) && player.Get_CanGrabObject())
+        {
+            animator.SetTrigger("grab");
+            player.Set_IsGrabbing(true);
         }
     }
 

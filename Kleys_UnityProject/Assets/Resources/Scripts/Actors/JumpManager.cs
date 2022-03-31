@@ -25,15 +25,22 @@ public class JumpManager : MonoBehaviour
     {
         if (gameObject.GetComponent<CapsuleCollider>())
         {
+            //The capsule is needed in order to cast a ray
             capsuleCollider = gameObject.GetComponent<CapsuleCollider>();
+            /*
+             * The two GroundCheck and FallingCheck functions like component of the class JumpManager
+             * Both have a method called Constructor that takes a reference to the JumpManager that is used by the Player class 
+            */
             groundCheck = gameObject.AddComponent<GroundCheck>();
             groundCheck.Constructor(this);
             fallingCheck = gameObject.AddComponent<FallingCheck>();
+            fallingCheck.Constructor(this);
+
+            //The class needs a reference to the Player class to communicate with it 
             if (gameObject.GetComponent<Player>())
             {
                 player = gameObject.GetComponent<Player>();
             }
-            fallingCheck.Constructor(this);
         }
         else
         {
@@ -41,38 +48,47 @@ public class JumpManager : MonoBehaviour
         }
     }
 
+    //The UpdateManager is called from the Update method of the class Player 
     public void UpdateManger()
     {
         if(player)
         {
+            //The first action to be performed is that of cast a Ray checking our distance from the ground
             RayCasting();
+            //The method ask: are we on ground or not?
             player.Set_IsOnGround(IsGrounded());
             if (player.Get_IsOnGround() == true)
             {
+                //If the player is on the ground that means that we are not falling and not jumping 
                 player.Set_IsFalling(false);
                 player.Set_IsJumping(false);
+                //After updating the variables we update the animations 
                 player.GetAnimator().SetBool("isFalling", false);
                 player.GetAnimator().SetBool("isGrounded", true);
                 player.GetAnimator().SetBool("isJumping", false);
             }
             else if (player.Get_IsOnGround() == false)
             {
+                //If the player is not on the ground we update the animation 
                 player.GetAnimator().SetBool("isGrounded", false);
+                //Then it is checked if the player is falling or not; and this depends upon the player distance from the ground 
                 player.Set_IsFalling(IsFalling());
 
                 if (player.Get_IsFalling() == true)
                 {
+                    //If the player is falling then the animation changes accordingly 
                     player.GetAnimator().SetBool("isFalling", true);
                 }
             }
             else if (player.Get_IsJumping() == false && player.Get_IsFalling() == false && player.Get_IsOnGround() == true)
             {
+                //This is just to monitor if we are on the ground or not; the actual animation is chenged elsewhere 
                 Debug.Log("Reached the ground"); 
             }
-
         }
     }
 
+    //The two methods ask the classes GroundCheck and FallingCheck to see whatever the player is on the ground or if it is falling 
     public bool IsGrounded()
     {
         if(groundCheck)
@@ -81,7 +97,6 @@ public class JumpManager : MonoBehaviour
         }
         return false;
     }
-
     public bool IsFalling()
     {
         if (fallingCheck)
@@ -90,7 +105,6 @@ public class JumpManager : MonoBehaviour
         }
         return false;
     }
-
     public void RayCasting ()
     {
         if (capsuleCollider)
@@ -108,15 +122,17 @@ public class JumpManager : MonoBehaviour
             Debug.Log("Error: Capsule not detected");
         }
     }
+
+    //The distance from the ground is here calculated and rounded 
     public float DistanceFromGround(RaycastHit hitInfo)
     {
-        Debug.Log(Mathf.Round(hitInfo.distance * 10) / 10);
         return Mathf.Round(hitInfo.distance * 10) / 10;
     }
     void DrawRay(RaycastHit hitInfo)
     {
         Debug.DrawRay(transform.position, Vector3.down * hitInfo.distance, Color.red);
     }
+    //The methods takes the animation an animation and stores it into a variable 
     public void SetAnimator(Animator anim)
     {
         animator = anim;

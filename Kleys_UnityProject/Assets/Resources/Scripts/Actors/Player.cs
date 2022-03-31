@@ -20,6 +20,8 @@ public class Player : MonoBehaviour, IActorTemplate
     [SerializeField] bool isOnGround;
     [SerializeField] bool isJumping;
     [SerializeField] bool isFalling;
+    [SerializeField] bool canGrabObject;
+    [SerializeField] bool isGrabbing;
 
     //A reference to the model used to represent the player
     Animator animator;
@@ -27,18 +29,20 @@ public class Player : MonoBehaviour, IActorTemplate
     GameObject player;
     InputManager inputManager;
     JumpManager jumpManager;
-
+    IKManager iKManager;
     void Start()
     {
         player = GameObject.Find("Player");
         inputManager = gameObject.AddComponent<InputManager>();
         jumpManager = gameObject.AddComponent<JumpManager>();
+        iKManager = gameObject.AddComponent<IKManager>();
 
         if (gameObject.GetComponent<Animator>() && inputManager != null)
         {
             animator = gameObject.GetComponent<Animator>();
             inputManager.SetAnimator(animator);
             jumpManager.SetAnimator(animator);
+            iKManager.Constructor(this, this.animator);
         }
         else
         {
@@ -47,8 +51,10 @@ public class Player : MonoBehaviour, IActorTemplate
     }
     void Update ()
     {
+        //The JumpManager class manages everything that is related to the action of jumping 
         if (jumpManager)
             jumpManager.UpdateManger();
+        //The InputManager class deals with incoming external inputs 
         if(inputManager)
             inputManager.UpdateAnimations();
     }
@@ -101,6 +107,21 @@ public class Player : MonoBehaviour, IActorTemplate
         else
             isFalling = false;
     }
+    public void Set_CanGrabObject(bool b)
+    {
+        if (b == true)
+            canGrabObject = true;
+        else
+            canGrabObject = false;
+    }
+    public void Set_IsGrabbing(bool b)
+    {
+        if (b == true)
+            isGrabbing = true;
+        else
+            isGrabbing = false;
+    }
+
     public Animator GetAnimator ()
     {
         return animator;
@@ -122,6 +143,13 @@ public class Player : MonoBehaviour, IActorTemplate
     public bool Get_IsFalling()
     {
         if (isFalling)
+            return true;
+        else
+            return false;
+    }
+    public bool Get_CanGrabObject()
+    {
+        if (canGrabObject)
             return true;
         else
             return false;
