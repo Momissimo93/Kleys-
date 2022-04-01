@@ -28,7 +28,7 @@ public class InteractiveObject : MonoBehaviour
             {
                 player = i.gameObject.GetComponent<Player>();
                 distance = Vector3.Distance(player.transform.Find("mixamorig9:Hips/mixamorig9:Spine/mixamorig9:Spine1/mixamorig9:Spine2/mixamorig9:RightShoulder").gameObject.transform.position, transform.position);
-                Debug.Log(distance);
+                //Debug.Log(distance);
 
                 if (player.gameObject.GetComponent<IKManager>())
                 {

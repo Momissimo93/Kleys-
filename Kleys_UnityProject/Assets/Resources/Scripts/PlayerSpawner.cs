@@ -51,7 +51,7 @@ public class PlayerSpawner : MonoBehaviour
         player.transform.SetParent(this.transform);
 
         //2) Reset the position
-        player.transform.position = new Vector3(5, 1,-45) ;
+        player.transform.position = this.transform.position ;
     }
 
     // Update is called once per frame

@@ -33,10 +33,11 @@ public class InputManager : MonoBehaviour
             player.Set_IsJumping(true);
             jump.Jumping(player.transform);
         }
-        else if (Input.GetKeyDown(KeyCode.F) && player.Get_CanGrabObject())
+        else if (Input.GetKeyDown(KeyCode.E) && player.Get_CanGrabObject())
         {
             animator.SetTrigger("grab");
             player.Set_IsGrabbing(true);
+            player.GetIkManager().SetActionType(0);
         }
     }
 

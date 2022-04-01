@@ -30,6 +30,7 @@ public class Player : MonoBehaviour, IActorTemplate
     InputManager inputManager;
     JumpManager jumpManager;
     IKManager iKManager;
+
     void Start()
     {
         player = GameObject.Find("Player");
@@ -125,6 +126,11 @@ public class Player : MonoBehaviour, IActorTemplate
     public Animator GetAnimator ()
     {
         return animator;
+    }
+
+    public IKManager GetIkManager()
+    {
+        return iKManager;
     }
     public bool Get_IsOnGround()
     {

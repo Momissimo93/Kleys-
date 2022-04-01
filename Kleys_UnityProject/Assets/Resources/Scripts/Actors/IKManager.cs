@@ -7,6 +7,9 @@ public class IKManager : MonoBehaviour
     Animator animator;
     Player player;
     int layerMask = 1 << 6;
+    int objectLayer = 1 << 7;
+    [SerializeField] float radius = 0.5f;
+    Collider[] collider;
     [SerializeField] enum ActionType {Grabbing, None};
     [SerializeField] ActionType actionType;
     [SerializeField] [Range(0, 1)] float distanceToGround = 0.18f;
@@ -14,6 +17,7 @@ public class IKManager : MonoBehaviour
     [SerializeField] bool canGrabObject = false;
     [SerializeField] Transform rightHandObj = null;
     [SerializeField] Transform lookObj = null;
+    //[SerializeField] float offSet_ = 0.1f;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,6 +33,14 @@ public class IKManager : MonoBehaviour
         SetWeight();
         RightFoot_IKManager();
         LeftFoot_IKManager();
+        switch(actionType)
+        {
+            case ActionType.Grabbing:
+                GrabObject();
+                break;
+            case ActionType.None:
+                break;
+        }
     }
     private void SetWeight()
     {
@@ -38,12 +50,11 @@ public class IKManager : MonoBehaviour
             animator.SetIKPositionWeight(AvatarIKGoal.LeftFoot, animator.GetFloat("LeftFootIK"));
             animator.SetIKRotationWeight(AvatarIKGoal.RightFoot, animator.GetFloat("RightFootIK"));
             animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot, animator.GetFloat("LeftFootIK"));
-
-            //animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1f);
+            animator.SetIKRotationWeight(AvatarIKGoal.RightHand, 0.5f);
+            animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 0.5f);
             //animator.SetIKRotationWeight(AvatarIKGoal.RightHand, 1f);
             //animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1f);
             //animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1f);
-
         }
     }
     private void RightFoot_IKManager()
@@ -55,7 +66,7 @@ public class IKManager : MonoBehaviour
         {
 
             //DrawRay(rightFootRay.origin, rightFootRay.direction);
-            Debug.Log("I am hitting the ground");
+            //Debug.Log("I am hitting the ground");
             animator.SetIKPosition(AvatarIKGoal.RightFoot, hit.point + (Vector3.down * distanceToGround) * offSet);
             animator.SetIKRotation(AvatarIKGoal.RightFoot, Quaternion.LookRotation(transform.forward, hit.normal));
         }
@@ -67,12 +78,44 @@ public class IKManager : MonoBehaviour
         DrawRay(leftFootRay.origin, leftFootRay.direction * distanceToGround, Color.red);
         if (Physics.Raycast(leftFootRay, out hit, distanceToGround, layerMask))
         {
-
             //DrawRay(rightFootRay.origin, rightFootRay.direction);
-            Debug.Log("I am hitting the ground");
+            //Debug.Log("I am hitting the ground");
             animator.SetIKPosition(AvatarIKGoal.LeftFoot, hit.point + (Vector3.down * distanceToGround) * offSet);
             animator.SetIKRotation(AvatarIKGoal.LeftFoot, Quaternion.LookRotation(transform.forward, hit.normal));
         }
+    }
+
+    private void GrabObject()
+    {
+        animator.SetLookAtPosition(lookObj.position);
+        animator.SetLookAtWeight(animator.GetFloat("lookAt_weightIK"), animator.GetFloat("lookAt_bodyWeightIK"), animator.GetFloat("lookAt_headWeightIK"), animator.GetFloat("lookAt_eyes_weightIK"));
+        animator.SetIKPositionWeight(AvatarIKGoal.RightHand, animator.GetFloat("rightHand_weightIk"));
+        //animator.SetIKPosition(AvatarIKGoal.RightHand, rightHandObj.position);
+        collider = Physics.OverlapSphere(animator.GetIKPosition(AvatarIKGoal.RightHand), radius, objectLayer);
+
+        foreach (var i in collider)
+        {
+            if (collider.GetValue(0) != null)
+            {
+                Ray rightHandRay = new Ray(animator.GetIKPosition(AvatarIKGoal.RightHand), i.transform.position - animator.GetIKPosition(AvatarIKGoal.RightHand));
+                RaycastHit hit;
+                Debug.DrawRay(animator.GetIKPosition(AvatarIKGoal.RightHand), i.transform.position - animator.GetIKPosition(AvatarIKGoal.RightHand), Color.red);
+                //I need the Normal to set the rotation of the hand 
+                if(Physics.Raycast(rightHandRay,out hit,1f,objectLayer))
+                {
+                    Debug.Log("Contact made");
+                    animator.SetIKPosition(AvatarIKGoal.RightHand, hit.transform.position);
+                    animator.SetIKRotation(AvatarIKGoal.RightHand, Quaternion.LookRotation(hit.transform.forward + hit.normal));
+                    //rightHandObj.SetParent(player.transform.Find("mixamorig9:Hips/mixamorig9:Spine/mixamorig9:Spine1/mixamorig9:Spine2/mixamorig9:RightShoulder/mixamorig9:RightArm/mixamorig9:RightForeArm/mixamorig9:RightHand").gameObject.transform);
+                }
+            }
+        } 
+    }
+
+    public void SetActionType(int i)
+    {
+        ActionType aT = (ActionType)i;
+        actionType = aT;
     }
 
     public void Set0bjectToGrab(Transform objectToGrab, bool b)
@@ -84,5 +127,9 @@ public class IKManager : MonoBehaviour
     private void DrawRay(Vector3 origin, Vector3 direction, Color color)
     {
         Debug.DrawRay(origin, direction, Color.red);
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(animator.GetIKPosition(AvatarIKGoal.RightHand), radius);
     }
 }
