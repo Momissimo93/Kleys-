@@ -19,6 +19,9 @@ public class SOActorModel : ScriptableObject
     public int rotationSpeed;
     //Jumping force of the actor 
     public int jumpingForce;
+
+    public bool isImmune;
     //Place the actor prefab here
     public GameObject actor;
+
 }

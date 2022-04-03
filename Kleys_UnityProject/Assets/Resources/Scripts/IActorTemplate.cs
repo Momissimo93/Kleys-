@@ -7,8 +7,8 @@ using UnityEngine;
 public interface IActorTemplate 
 {
     //Those method acts like contracts to the classes that will inherits the interface
-    //int SendDamage();
-    //void TakeDamage(int incomingDamage);
-    //void Die();
+    int SendDamage();
+    void TakeDamage(int incomingDamage);
+    void Die();
     void ActorStats(SOActorModel actorModel);
 }

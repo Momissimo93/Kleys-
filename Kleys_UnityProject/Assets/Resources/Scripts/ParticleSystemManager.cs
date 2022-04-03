@@ -22,10 +22,6 @@ public class ParticleSystemManager : MonoBehaviour
                 fire_Compoent = ts[i].gameObject.GetComponent<ParticleSystem>();
                 collisionEvents = new List<ParticleCollisionEvent>();
             }
-            else
-            {
-                Debug.Log("Error");
-            }
         }
         if (gameObject.GetComponent<ParticleSystem>())
         {

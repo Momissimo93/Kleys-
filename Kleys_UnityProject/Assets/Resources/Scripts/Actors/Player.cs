@@ -22,7 +22,9 @@ public class Player : MonoBehaviour, IActorTemplate
     [SerializeField] bool isFalling;
     [SerializeField] bool canGrabObject;
     [SerializeField] bool isGrabbing;
-
+    [SerializeField] bool isImmume = false;
+    [SerializeField]Key[] bag = new Key[1]; //Da rivedere
+    [SerializeField] int keyCounter;
     //A reference to the model used to represent the player
     Animator animator;
     GameObject actor;
@@ -31,12 +33,15 @@ public class Player : MonoBehaviour, IActorTemplate
     JumpManager jumpManager;
     IKManager iKManager;
 
+    Immunity immunity;
+
     void Start()
     {
         player = GameObject.Find("Player");
         inputManager = gameObject.AddComponent<InputManager>();
         jumpManager = gameObject.AddComponent<JumpManager>();
         iKManager = gameObject.AddComponent<IKManager>();
+        immunity = gameObject.AddComponent<Immunity>();
 
         if (gameObject.GetComponent<Animator>() && inputManager != null)
         {
@@ -67,6 +72,51 @@ public class Player : MonoBehaviour, IActorTemplate
         health = actorModel.health;
         jumpingForce = actorModel.jumpingForce;
     }
+    private void OnParticleCollision(GameObject other)
+    {
+        if (other.tag == "Fire" && isImmume == false)
+        {
+            health --;
+            if (health > 0)
+            {
+                Set_IsImmune(true);
+                immunity.SetImmunityTime(2, this.gameObject);
+                GameManager.Instance.LifeLost();
+            }
+            else if (health == 0)
+            {
+                Die();
+            }
+        }
+    }
+    public void TakeDamage(int incomingDamage)
+    {
+        health -= incomingDamage;
+    }
+    public void Die()
+    {
+        GameManager.Instance.LifeLost();
+        Destroy(this.gameObject);
+    }
+    public int SendDamage()
+    {
+        return 0;
+    }
+    public void StoreKey(Key k)
+    {
+        if (keyCounter == 0 && k.getName() == "B")
+        {
+        }
+        else if (keyCounter == 0 && k.getName() == "A")
+        {
+            keyCounter++;
+        }
+        else if (keyCounter == 1 && k.getName() == "B")
+        {
+            keyCounter++;
+        }
+    }
+    //----Setters and Getters 
     public int Health
     {
         get { return health; }
@@ -122,12 +172,17 @@ public class Player : MonoBehaviour, IActorTemplate
         else
             isGrabbing = false;
     }
-
+    public void Set_IsImmune(bool b)
+    {
+        if (b == true)
+            isImmume = true;
+        else
+            isImmume = false;
+    }
     public Animator GetAnimator ()
     {
         return animator;
     }
-
     public IKManager GetIkManager()
     {
         return iKManager;
@@ -159,5 +214,16 @@ public class Player : MonoBehaviour, IActorTemplate
             return true;
         else
             return false;
+    }
+    public bool Get_IsImmune()
+    {
+        if (isImmume)
+            return true;
+        else
+            return false;
+    }
+    public int Get_KeyNumber()
+    {
+        return keyCounter;
     }
 }
