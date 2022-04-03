@@ -7,11 +7,9 @@ public class DoorManager : MonoBehaviour
     [SerializeField] MagicDoor magicDoor;
     private void OnTriggerEnter(Collider collision)
     {
-        Player p;
         if (collision.gameObject.GetComponent<Player>())
         {
-            p = collision.gameObject.GetComponent<Player>();
-            if(p.Get_KeyNumber() == 2)
+            if(Inventory.instance.hasAllKeys == true)
             {
                 Debug.Log("Enough_Key");
                 magicDoor.OpenDoor();

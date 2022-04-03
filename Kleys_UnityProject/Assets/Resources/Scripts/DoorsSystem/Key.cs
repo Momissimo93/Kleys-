@@ -18,7 +18,7 @@ public class Key : MonoBehaviour
         if(collision.gameObject.GetComponent<Player>())
         {
             p = collision.gameObject.GetComponent<Player>();
-            p.StoreKey(k);
+            //p.StoreKey(k);
             Destroy(this.gameObject);
         }
     }

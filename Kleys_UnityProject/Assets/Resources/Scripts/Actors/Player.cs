@@ -23,7 +23,7 @@ public class Player : MonoBehaviour, IActorTemplate
     [SerializeField] bool canGrabObject;
     [SerializeField] bool isGrabbing;
     [SerializeField] bool isImmume = false;
-    [SerializeField]Key[] bag = new Key[1]; //Da rivedere
+    //[SerializeField]Key[] bag = new Key[1]; //Da rivedere
     [SerializeField] int keyCounter;
     //A reference to the model used to represent the player
     Animator animator;
@@ -102,7 +102,7 @@ public class Player : MonoBehaviour, IActorTemplate
     {
         return 0;
     }
-    public void StoreKey(Key k)
+    /*public void StoreKey(Key k)
     {
         if (keyCounter == 0 && k.getName() == "B")
         {
@@ -115,7 +115,9 @@ public class Player : MonoBehaviour, IActorTemplate
         {
             keyCounter++;
         }
-    }
+    }*/
+
+
     //----Setters and Getters 
     public int Health
     {

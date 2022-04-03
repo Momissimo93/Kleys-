@@ -4,8 +4,15 @@ using UnityEngine;
 
 public class IKManager : MonoBehaviour
 {
+    [Header("Right Hand IK")]
+    [Range(0, 1)] [SerializeField] float rightHandWeight;
+    [SerializeField] Transform rightHandObj = null;
+    [SerializeField] Transform lookObj = null;
+    [SerializeField] Transform rightHandHint = null;
+
     Animator animator;
     Player player;
+
     int layerMask = 1 << 6;
     int objectLayer = 1 << 7;
     [SerializeField] float radius = 0.5f;
@@ -15,8 +22,7 @@ public class IKManager : MonoBehaviour
     [SerializeField] [Range(0, 1)] float distanceToGround = 0.18f;
     [SerializeField] [Range(-1.0f, -0.5f)] float offSet = -0.8f;
     [SerializeField] bool canGrabObject = false;
-    [SerializeField] Transform rightHandObj = null;
-    [SerializeField] Transform lookObj = null;
+
     //[SerializeField] float offSet_ = 0.1f;
     // Start is called before the first frame update
     void Start()
@@ -28,34 +34,38 @@ public class IKManager : MonoBehaviour
         player = p;
         animator = a;
     }
-    private void OnAnimatorIK(int layerIndex)
+    private void OnAnimatorIK()
     {
-        SetWeight();
-        RightFoot_IKManager();
-        LeftFoot_IKManager();
-        switch(actionType)
+        if(animator)
         {
-            case ActionType.Grabbing:
-                GrabObject();
-                break;
-            case ActionType.None:
-                break;
+            SetWeight();
+            RightFoot_IKManager();
+            LeftFoot_IKManager();
+            switch (actionType)
+            {
+                case ActionType.Grabbing:
+                    GrabObject();
+                    break;
+                case ActionType.None:
+                    HoldingObject();
+                    break;
+            }
         }
     }
     private void SetWeight()
     {
-        if (animator)
-        {
-            animator.SetIKPositionWeight(AvatarIKGoal.RightFoot, animator.GetFloat("RightFootIK"));
-            animator.SetIKPositionWeight(AvatarIKGoal.LeftFoot, animator.GetFloat("LeftFootIK"));
-            animator.SetIKRotationWeight(AvatarIKGoal.RightFoot, animator.GetFloat("RightFootIK"));
-            animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot, animator.GetFloat("LeftFootIK"));
-            animator.SetIKRotationWeight(AvatarIKGoal.RightHand, 0.5f);
-            animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 0.5f);
-            //animator.SetIKRotationWeight(AvatarIKGoal.RightHand, 1f);
+        animator.SetIKPositionWeight(AvatarIKGoal.RightFoot, animator.GetFloat("RightFootIK"));
+        animator.SetIKPositionWeight(AvatarIKGoal.LeftFoot, animator.GetFloat("LeftFootIK"));
+
+        animator.SetIKRotationWeight(AvatarIKGoal.RightFoot, animator.GetFloat("RightFootIK"));
+        animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot, animator.GetFloat("LeftFootIK"));
+
+        //I have the same wight for rotation and position
+        animator.SetIKPositionWeight(AvatarIKGoal.RightHand, rightHandWeight);
+        animator.SetIKRotationWeight(AvatarIKGoal.RightHand, rightHandWeight);
+
             //animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1f);
             //animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1f);
-        }
     }
     private void RightFoot_IKManager()
     {
@@ -111,6 +121,16 @@ public class IKManager : MonoBehaviour
             }
         } 
     }
+
+    private void HoldingObject()
+    {
+        if (rightHandObj != null)
+        {
+            animator.SetIKPosition(AvatarIKGoal.RightHand, rightHandObj.position);
+            animator.SetIKRotation(AvatarIKGoal.RightHand, rightHandObj.rotation);
+        }
+    }
+
 
     public void SetActionType(int i)
     {

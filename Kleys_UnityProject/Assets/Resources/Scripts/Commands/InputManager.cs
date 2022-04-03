@@ -12,12 +12,18 @@ public class InputManager : MonoBehaviour
     private Animator animator;
     private Player player;
 
+    private ItemSpawner itemSpawner;
+    private GameObject torch;
+
+    private bool torchActive;
     // Start is called before the first frame update
     void Start()
     {
         translate = new Translate();
         rotate = new Rotate();
         jump = new Jump();
+
+        itemSpawner = gameObject.AddComponent<ItemSpawner>();
         if(gameObject.GetComponent<Player>())
         {
             player = gameObject.GetComponent<Player>();
@@ -38,6 +44,17 @@ public class InputManager : MonoBehaviour
             animator.SetTrigger("grab");
             player.Set_IsGrabbing(true);
             player.GetIkManager().SetActionType(0);
+        }
+        else if (Input.GetKeyDown(KeyCode.Q) && Inventory.instance.HasItem("Torch") && !torchActive)
+        {
+            torchActive = true;
+            itemSpawner.SpawnItem("Torch");
+            torch = itemSpawner.GetReference();
+        }
+        else if (Input.GetKeyDown(KeyCode.Q) && Inventory.instance.HasItem("Torch") && torchActive)
+        {
+            torchActive = false;
+            Destroy(torch);
         }
     }
 
