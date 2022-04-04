@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ItemSpawner : MonoBehaviour
 {
-    SOItem itemModel;
+    SOWeapon itemModel;
     GameObject item;
     Player player;
 
@@ -19,11 +19,10 @@ public class ItemSpawner : MonoBehaviour
     {
         if(name == "Torch")
         {
-            if (Resources.Load("ScriptableObject/Items/Torch"))
+            if (Resources.Load("ScriptableObject/Weapons/Torch"))
             {
-                itemModel = Object.Instantiate(Resources.Load("ScriptableObject/Items/Torch")) as SOItem;
+                itemModel = Object.Instantiate(Resources.Load("ScriptableObject/Weapons/Torch")) as SOWeapon;
                 item = GameObject.Instantiate(itemModel.item) as GameObject;
-                Debug.Log("Sapwn torch");
                 SetItem();
             }
             else
@@ -40,7 +39,6 @@ public class ItemSpawner : MonoBehaviour
             //2) Reset the position
             item.transform.position = player.transform.Find("mixamorig9:Hips/mixamorig9:Spine/mixamorig9:Spine1/mixamorig9:Spine2/mixamorig9:RightShoulder/mixamorig9:RightArm/mixamorig9:RightForeArm/mixamorig9:RightHand/PickPos").gameObject.transform.position;
             item.transform.localEulerAngles = player.transform.Find("mixamorig9:Hips/mixamorig9:Spine/mixamorig9:Spine1/mixamorig9:Spine2/mixamorig9:RightShoulder/mixamorig9:RightArm/mixamorig9:RightForeArm/mixamorig9:RightHand/PickPos").gameObject.transform.localEulerAngles;
-            Debug.Log("SetItem");
         }
     }
     

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ParticleSystemManager : MonoBehaviour
 {
+    [SerializeField] float waitFor;
     ParticleSystem fire;
     [SerializeField] ParticleSystem fire_Compoent;
     [SerializeField] bool fireIsPlaying = true;
@@ -37,7 +38,7 @@ public class ParticleSystemManager : MonoBehaviour
     void Update()
     {
         seconds = seconds + (Time.deltaTime);
-        if(seconds >= 4)
+        if(seconds >= waitFor)
         {
             if(fireIsPlaying == true)
             {
@@ -81,7 +82,6 @@ public class ParticleSystemManager : MonoBehaviour
     }
     private IEnumerator PlayRoutine()
     {
-
         yield return new WaitForSeconds(3);
         fire.Stop();
     }

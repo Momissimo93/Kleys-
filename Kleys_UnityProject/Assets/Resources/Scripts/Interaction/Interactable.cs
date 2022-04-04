@@ -8,6 +8,11 @@ public class Interactable : MonoBehaviour
     [SerializeField] bool canInteract = false;
     int playerLayer = 1 << 10;
     Player player;
+
+    void Start()
+    {
+        ItemStats();
+    }
     private void Update()
     {
         GenerateSphere();
@@ -41,6 +46,10 @@ public class Interactable : MonoBehaviour
     }
 
     public virtual void Interact()
+    {
+        //This method is meant to be overrwritten 
+    }
+    public virtual void ItemStats()
     {
         //This method is meant to be overrwritten 
     }

@@ -50,6 +50,7 @@ public class InputManager : MonoBehaviour
             torchActive = true;
             itemSpawner.SpawnItem("Torch");
             torch = itemSpawner.GetReference();
+            player.GetIkManager().SetRightHandWeapon(torch);    
         }
         else if (Input.GetKeyDown(KeyCode.Q) && Inventory.instance.HasItem("Torch") && torchActive)
         {
@@ -57,7 +58,6 @@ public class InputManager : MonoBehaviour
             Destroy(torch);
         }
     }
-
     private void FixedUpdate()
     {
         verticalInput = Input.GetAxis("Vertical");

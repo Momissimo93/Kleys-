@@ -7,6 +7,7 @@ public class IKManager : MonoBehaviour
     [Header("Right Hand IK")]
     [Range(0, 1)] [SerializeField] float rightHandWeight;
     [SerializeField] Transform rightHandObj = null;
+    [SerializeField] Transform rightHandWeapon = null;
     [SerializeField] Transform lookObj = null;
     [SerializeField] Transform rightHandHint = null;
 
@@ -15,7 +16,8 @@ public class IKManager : MonoBehaviour
 
     int layerMask = 1 << 6;
     int objectLayer = 1 << 7;
-    [SerializeField] float radius = 0.5f;
+    int weaponLayer = 1 << 11;
+    [SerializeField] float radius = 0.2f;
     Collider[] collider;
     [SerializeField] enum ActionType {Grabbing, None};
     [SerializeField] ActionType actionType;
@@ -47,7 +49,7 @@ public class IKManager : MonoBehaviour
                     GrabObject();
                     break;
                 case ActionType.None:
-                    HoldingObject();
+                    HoldingWeapon();
                     break;
             }
         }
@@ -61,8 +63,8 @@ public class IKManager : MonoBehaviour
         animator.SetIKRotationWeight(AvatarIKGoal.LeftFoot, animator.GetFloat("LeftFootIK"));
 
         //I have the same wight for rotation and position
-        animator.SetIKPositionWeight(AvatarIKGoal.RightHand, rightHandWeight);
-        animator.SetIKRotationWeight(AvatarIKGoal.RightHand, rightHandWeight);
+        animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
+        animator.SetIKRotationWeight(AvatarIKGoal.RightHand, 1f);
 
             //animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1f);
             //animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1f);
@@ -97,6 +99,7 @@ public class IKManager : MonoBehaviour
 
     private void GrabObject()
     {
+        /*
         animator.SetLookAtPosition(lookObj.position);
         animator.SetLookAtWeight(animator.GetFloat("lookAt_weightIK"), animator.GetFloat("lookAt_bodyWeightIK"), animator.GetFloat("lookAt_headWeightIK"), animator.GetFloat("lookAt_eyes_weightIK"));
         animator.SetIKPositionWeight(AvatarIKGoal.RightHand, animator.GetFloat("rightHand_weightIk"));
@@ -119,18 +122,28 @@ public class IKManager : MonoBehaviour
                     //rightHandObj.SetParent(player.transform.Find("mixamorig9:Hips/mixamorig9:Spine/mixamorig9:Spine1/mixamorig9:Spine2/mixamorig9:RightShoulder/mixamorig9:RightArm/mixamorig9:RightForeArm/mixamorig9:RightHand").gameObject.transform);
                 }
             }
-        } 
+        } */
     }
 
-    private void HoldingObject()
+
+    private void HoldingWeapon()
     {
-        if (rightHandObj != null)
+        if (rightHandWeapon)
         {
-            animator.SetIKPosition(AvatarIKGoal.RightHand, rightHandObj.position);
-            animator.SetIKRotation(AvatarIKGoal.RightHand, rightHandObj.rotation);
+            collider = Physics.OverlapSphere(animator.GetIKPosition(AvatarIKGoal.RightHand), radius, weaponLayer);
+            foreach (var i in collider)
+            {
+                RaycastHit hit;
+                Ray r = new Ray(animator.GetIKPosition(AvatarIKGoal.RightHand), i.transform.position - animator.GetIKPosition(AvatarIKGoal.RightHand));
+                Debug.DrawRay(animator.GetIKPosition(AvatarIKGoal.RightHand), i.transform.position - animator.GetIKPosition(AvatarIKGoal.RightHand), Color.red);
+                animator.SetIKPosition(AvatarIKGoal.RightHand, i.transform.position);
+                if (Physics.Raycast(r, out hit, 1, weaponLayer))
+                {
+                    animator.SetIKRotation(AvatarIKGoal.RightHand, Quaternion.LookRotation(hit.transform.forward, hit.normal));
+                }
+            }
         }
     }
-
 
     public void SetActionType(int i)
     {
@@ -144,12 +157,22 @@ public class IKManager : MonoBehaviour
         lookObj = objectToGrab;
         player.Set_CanGrabObject(b);
     }
+
+    public void SetRightHandWeapon(GameObject objectToGrab)
+    {
+        rightHandWeapon = objectToGrab.transform;
+        if(rightHandWeapon != null)
+        {
+            //HoldingWeapon();
+        }
+    }
+
     private void DrawRay(Vector3 origin, Vector3 direction, Color color)
     {
         Debug.DrawRay(origin, direction, Color.red);
     }
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(animator.GetIKPosition(AvatarIKGoal.RightHand), radius);
+        //Gizmos.DrawWireSphere(animator.GetIKPosition(AvatarIKGoal.RightHand), radius);
     }
 }

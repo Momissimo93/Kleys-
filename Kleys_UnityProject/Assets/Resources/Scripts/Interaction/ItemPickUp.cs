@@ -3,17 +3,26 @@ using UnityEngine;
 
 public class ItemPickUp : Interactable
 {
-    [SerializeField] SOItem item;
+    [SerializeField] new string name;
+    [SerializeField] bool isCursed;
+    [SerializeField] bool isKey;
+    [SerializeField] SOItemPickUp item;
 
+    void PickUp()
+    {
+        Inventory.instance.Add(item);
+        Destroy(gameObject);
+    }
     public override void Interact()
     {
         base.Interact();
         PickUp();
     }
-    void PickUp()
+
+    public override void ItemStats()
     {
-        Debug.Log("Pick" + item.name);
-        Inventory.instance.Add(item);
-        Destroy(gameObject);
+        name = item.name;
+        isCursed = item.isCursed;
+        isKey = item.isKey;
     }
 }

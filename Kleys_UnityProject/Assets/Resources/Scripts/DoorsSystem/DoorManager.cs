@@ -9,7 +9,7 @@ public class DoorManager : MonoBehaviour
     {
         if (collision.gameObject.GetComponent<Player>())
         {
-            if(Inventory.instance.hasAllKeys == true)
+            if(Inventory.instance.HasItem("Golden_Key") && Inventory.instance.HasItem("Silver_Key"))
             {
                 Debug.Log("Enough_Key");
                 magicDoor.OpenDoor();

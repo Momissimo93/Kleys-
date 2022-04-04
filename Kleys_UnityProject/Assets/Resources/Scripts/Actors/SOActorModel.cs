@@ -19,7 +19,7 @@ public class SOActorModel : ScriptableObject
     public int rotationSpeed;
     //Jumping force of the actor 
     public int jumpingForce;
-
+    //Is the actor currently immune to damages?
     public bool isImmune;
     //Place the actor prefab here
     public GameObject actor;

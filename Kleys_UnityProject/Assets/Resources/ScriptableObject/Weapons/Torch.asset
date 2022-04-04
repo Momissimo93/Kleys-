@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60a69dade57c3d94b912c32b925778cd, type: 3}
+  m_Name: Torch
+  m_EditorClassIdentifier: 
+  name: Torch_Weapon
+  damage: 1
+  item: {fileID: 2481145826633655201, guid: e80b6f9b57bc7b34488e7f537c534968, type: 3}

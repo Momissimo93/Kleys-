@@ -18,15 +18,18 @@ public class Inventory : MonoBehaviour
     }
     #endregion
 
-    public List<SOItem> sOItems = new List<SOItem>();
+    public List<SOItemPickUp> inventory = new List<SOItemPickUp>();
     public bool hasAllKeys = false;
-    public void Add(SOItem item)
+    public void Add(SOItemPickUp item)
     {
+        /*
+        Debug.Log("Add " + item.name);
         if(item.isCursed && item.isKey)
         {
             if(Check(item))
             {
-                sOItems.Add(item);
+                Debug.Log("The item is cursed");
+                inventory.Add(item);
             }
             else
             {
@@ -35,22 +38,24 @@ public class Inventory : MonoBehaviour
         }
         else
         {
-            sOItems.Add(item);
-        }
+            inventory.Add(item);
+        }*/
+
+        inventory.Add(item);
     }
 
-    bool Check (SOItem item)
+    /*bool Check (SOItemPickUp item)
     {
         if (item.name == "Silver_Key")
         {
             Debug.Log("True we have the Silver_Key");
-            if(sOItems.Count == 0)
+            if(inventory.Count == 0)
             {
                 return false;
             }
             else
             {
-                foreach (SOItem i in sOItems)
+                foreach (SOItemPickUp i in inventory)
                 {
                     if (i.name != "Golden_Key")
                     {
@@ -70,9 +75,10 @@ public class Inventory : MonoBehaviour
         }
         return true;
     }
+    */
     public bool HasItem(string name)
     {
-        if (sOItems.Count == 0)
+        if (inventory.Count == 0)
         {
             return false; 
         }
@@ -84,7 +90,7 @@ public class Inventory : MonoBehaviour
 
     bool Search(string s)
     {
-        foreach (SOItem i in sOItems)
+        foreach (SOItemPickUp i in inventory)
         {
             if (i.name == s)
             {
