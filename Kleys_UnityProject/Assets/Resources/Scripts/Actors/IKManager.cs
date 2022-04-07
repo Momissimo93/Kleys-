@@ -64,7 +64,7 @@ public class IKManager : MonoBehaviour
 
         //I have the same wight for rotation and position
         animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
-        animator.SetIKRotationWeight(AvatarIKGoal.RightHand, 1f);
+        animator.SetIKRotationWeight(AvatarIKGoal.RightHand, 1);
 
             //animator.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1f);
             //animator.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1f);
@@ -130,6 +130,21 @@ public class IKManager : MonoBehaviour
     {
         if (rightHandWeapon)
         {
+            Debug.Log("We have a weapon");
+            animator.SetIKPosition(AvatarIKGoal.RightHand, rightHandWeapon.position);
+            animator.SetIKRotation(AvatarIKGoal.RightHand, Quaternion.LookRotation(-rightHandWeapon.right, Vector3.up));
+
+            /*
+            RaycastHit hit;
+            Ray rightArmRay = new Ray(animator.GetIKPosition(AvatarIKGoal.RightHand)* 0.5f, Vector3.left);
+            Debug.DrawRay(animator.GetIKPosition(AvatarIKGoal.RightHand) * 0.5f, Vector3.left, Color.red);
+            if(Physics.Raycast(rightArmRay, out hit, 1, weaponLayer))
+            {
+                Debug.Log("Hit the weapon");
+                animator.SetIKPosition(AvatarIKGoal.RightHand, rightHandWeapon.position);
+                animator.SetIKRotation(AvatarIKGoal.RightHand, Quaternion.LookRotation(-rightHandWeapon.right, Vector3.up));
+            }*/
+            /*
             collider = Physics.OverlapSphere(animator.GetIKPosition(AvatarIKGoal.RightHand), radius, weaponLayer);
             foreach (var i in collider)
             {
@@ -141,7 +156,7 @@ public class IKManager : MonoBehaviour
                 {
                     animator.SetIKRotation(AvatarIKGoal.RightHand, Quaternion.LookRotation(hit.transform.forward, hit.normal));
                 }
-            }
+            }*/
         }
     }
 

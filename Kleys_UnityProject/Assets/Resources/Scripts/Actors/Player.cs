@@ -32,7 +32,7 @@ public class Player : MonoBehaviour, IActorTemplate
     InputManager inputManager;
     JumpManager jumpManager;
     IKManager iKManager;
-
+    KnockBack knockBack;
     Immunity immunity;
 
     void Start()
@@ -42,6 +42,7 @@ public class Player : MonoBehaviour, IActorTemplate
         jumpManager = gameObject.AddComponent<JumpManager>();
         iKManager = gameObject.AddComponent<IKManager>();
         immunity = gameObject.AddComponent<Immunity>();
+        knockBack = gameObject.AddComponent<KnockBack>();
 
         if (gameObject.GetComponent<Animator>() && inputManager != null)
         {
@@ -76,22 +77,25 @@ public class Player : MonoBehaviour, IActorTemplate
     {
         if (other.tag == "Fire" && isImmume == false)
         {
-            health --;
-            if (health > 0)
-            {
-                Set_IsImmune(true);
-                immunity.SetImmunityTime(2, this.gameObject);
-                GameManager.Instance.LifeLost();
-            }
-            else if (health == 0)
-            {
-                Die();
-            }
+            TakeDamage(1, other);
         }
     }
-    public void TakeDamage(int incomingDamage)
+    public void TakeDamage(int incomingDamage, GameObject offender)
     {
+        Set_IsImmune(true);
         health -= incomingDamage;
+
+        if (health > 0)
+        {
+            knockBack.KnockingBack(this.gameObject, offender);
+            immunity.SetImmunityTime(2, this.gameObject);
+            GameManager.Instance.LifeLost();
+        }
+        else if (health == 0)
+        {
+            Debug.Log("Die");
+            Die();
+        }
     }
     public void Die()
     {
@@ -181,6 +185,7 @@ public class Player : MonoBehaviour, IActorTemplate
         else
             isImmume = false;
     }
+
     public Animator GetAnimator ()
     {
         return animator;
@@ -228,4 +233,9 @@ public class Player : MonoBehaviour, IActorTemplate
     {
         return keyCounter;
     }
+    public bool Get_IsKnocking()
+    {
+        return knockBack.isKnockedBack;
+    }
+
 }

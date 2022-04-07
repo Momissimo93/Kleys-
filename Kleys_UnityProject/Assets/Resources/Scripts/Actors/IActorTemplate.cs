@@ -8,7 +8,7 @@ public interface IActorTemplate
 {
     //Those method acts like contracts to the classes that will inherits the interface
     int SendDamage();
-    void TakeDamage(int incomingDamage);
+    void TakeDamage(int incomingDamage, GameObject offender);
     void Die();
     void ActorStats(SOActorModel actorModel);
 }

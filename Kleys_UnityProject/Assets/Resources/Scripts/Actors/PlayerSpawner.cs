@@ -10,7 +10,7 @@ public class PlayerSpawner : MonoBehaviour
     GameObject player;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         CreatePlayer();
     }

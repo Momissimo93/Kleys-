@@ -33,46 +33,53 @@ public class InputManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetButtonDown("Jump") && player.Get_IsOnGround())
+        if (player.Get_IsKnocking() == false)
         {
-            animator.SetBool("isJumping", true);
-            player.Set_IsJumping(true);
-            jump.Jumping(player.transform);
-        }
-        else if (Input.GetKeyDown(KeyCode.E) && player.Get_CanGrabObject())
-        {
-            animator.SetTrigger("grab");
-            player.Set_IsGrabbing(true);
-            player.GetIkManager().SetActionType(0);
-        }
-        else if (Input.GetKeyDown(KeyCode.Q) && Inventory.instance.HasItem("Torch") && !torchActive)
-        {
-            torchActive = true;
-            itemSpawner.SpawnItem("Torch");
-            torch = itemSpawner.GetReference();
-            player.GetIkManager().SetRightHandWeapon(torch);    
-        }
-        else if (Input.GetKeyDown(KeyCode.Q) && Inventory.instance.HasItem("Torch") && torchActive)
-        {
-            torchActive = false;
-            Destroy(torch);
+            if (Input.GetButtonDown("Jump") && player.Get_IsOnGround())
+            {
+                animator.SetBool("isJumping", true);
+                player.Set_IsJumping(true);
+                jump.Jumping(player.transform);
+            }
+            else if (Input.GetKeyDown(KeyCode.E) && player.Get_CanGrabObject())
+            {
+                animator.SetTrigger("grab");
+                player.Set_IsGrabbing(true);
+                player.GetIkManager().SetActionType(0);
+            }
+            else if (Input.GetKeyDown(KeyCode.Q) && Inventory.instance.HasItem("Torch") && !torchActive)
+            {
+                torchActive = true;
+                itemSpawner.SpawnItem("Torch");
+                torch = itemSpawner.GetReference();
+                player.GetIkManager().SetRightHandWeapon(torch);
+            }
+            else if (Input.GetKeyDown(KeyCode.Q) && Inventory.instance.HasItem("Torch") && torchActive)
+            {
+                torchActive = false;
+                Destroy(torch);
+            }
         }
     }
     private void FixedUpdate()
     {
-        verticalInput = Input.GetAxis("Vertical");
-        horizontalInput = Input.GetAxis("Horizontal");
-        if (verticalInput != 0)
+        if (player.Get_IsKnocking() == false)
         {
-            HandleVerticalInputs(verticalInput);
-            if (horizontalInput != 0)
+            verticalInput = Input.GetAxis("Vertical");
+            horizontalInput = Input.GetAxis("Horizontal");
+
+            if (verticalInput != 0)
+            {
+                HandleVerticalInputs(verticalInput);
+                if (horizontalInput != 0)
+                {
+                    HandleHorizontalInputs(horizontalInput);
+                }
+            }
+            else if (horizontalInput != 0)
             {
                 HandleHorizontalInputs(horizontalInput);
             }
-        }
-        else if (horizontalInput != 0)
-        {
-            HandleHorizontalInputs(horizontalInput);
         }
     }
     private void HandleVerticalInputs(float verticalInput)

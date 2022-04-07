@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actorName: Leonard
   description: Leonard is the  main Actor that the user will play
-  health: 3
+  health: 30
   speed: 5
   rotationSpeed: 80
-  jumpingForce: 300
+  jumpingForce: 5
+  isImmune: 0
   actor: {fileID: 6371854253120153977, guid: b9861274817502840bdc504f971de37d, type: 3}

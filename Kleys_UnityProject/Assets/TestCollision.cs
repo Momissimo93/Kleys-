@@ -17,6 +17,6 @@ public class TestCollision : MonoBehaviour
     }
     void OnParticleCollision(GameObject other)
     {
-        Debug.Log("collision");
+       // Debug.Log("collision");
     }
 }
